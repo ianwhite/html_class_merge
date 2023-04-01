@@ -16,13 +16,15 @@ Furthermore, if our merger knows about padding and text size, we could add anoth
 ## What knowledge the html class merger can use, and in what way
 
 - What **group** a html class belongs to, specified as a list of Strings, or Regular expressions
-- What groups **replace** other groups, for example, `:border_width` group should replace more specific border width classes `:border_x`,... , but not the other way around
-- Are there **scopes** that further divide the html classes? For example, a background colour group should not ovveride a **hover** background colour group, but within the **hover** scope, background colour groups should apply in the same way
+- What groups **replace** other groups, for example, `:border_width` group should replace more specific border width classes `:border_width_x`,... , but not the other way around
+- Are there **scopes** that further divide the html classes? For example, a background colour group should not ovveride a *hover* background colour group, but within the *hover* scope, background colour groups should apply in the same way
 - Some html classes marked as **important** should not be overridden by subsequent html classes in the same group
 
 By default `HtmlClassMerger` provides a way of configuring what html classes are in a **group**, and what groups **replace** other groups.
 
-HtmlClassMerger provides template methods for determining **scope**, and whether a html class is **important**, which implementations can make use of.
+`HtmlClassMerger` provides template methods for determining **scope**, and whether a html class is **important**, which implementations can make use of.
+
+`TailwindClassMerger` extends the above with the knowledge of important and scopes.
 
 ## Installation
 
