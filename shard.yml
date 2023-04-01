@@ -1,0 +1,9 @@
+name: html_class_merger
+version: 0.1.0
+
+authors:
+  - Ian White <ian.w.white@gmail.com>
+
+crystal: 1.7.3
+
+license: MIT
