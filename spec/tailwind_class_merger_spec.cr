@@ -3,15 +3,16 @@ require "./spec_helper"
 require "../src/tailwind_class_merger"
 
 TestTailwindMerger = TailwindClassMerger.new
-TestTailwindMerger.register! :bg, [/\Abg-/]
-TestTailwindMerger.register! :text, [/\Atext-/]
-TestTailwindMerger.register! :border, [/\Aborder-\d/], replace: [:border_x, :border_y, :border_l, :border_r, :border_t, :border_b]
-TestTailwindMerger.register! :border_x, [/\Aborder-x-\d/], replace: [:border_l, :border_r]
-TestTailwindMerger.register! :border_y, [/\Aborder-y-\d/], replace: [:border_t, :border_b]
-TestTailwindMerger.register! :border_l, [/\Aborder-l-\d/]
-TestTailwindMerger.register! :border_r, [/\Aborder-r-\d/]
-TestTailwindMerger.register! :border_t, [/\Aborder-t-\d/]
-TestTailwindMerger.register! :border_b, [/\Aborder-b-\d/]
+TestTailwindMerger.register! :bg, /\Abg-/
+TestTailwindMerger.register! "text", [/\Atext-/]
+TestTailwindMerger.register! :border, [/border-\d/, "border-none"], replace: "border_x border_y"
+
+{ "x" => ["l", "r"], "y" => ["t", "b"] }.each do |axis, sides|
+  TestTailwindMerger.register! "border_#{axis}", [/border-#{axis}-\d/, "border-#{axis}-none"], replace: sides.map { |side| "border_#{side}" }
+  sides.each do |side|
+    TestTailwindMerger.register! "border_#{side}", [/border-#{side}-\d/, "border-#{side}-none"]
+  end
+end
 
 describe TailwindClassMerger do
   describe "#merge" do

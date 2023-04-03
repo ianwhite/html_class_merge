@@ -46,24 +46,24 @@ require "html_class_merger"
 
 ## Example
 
-    An example of tailwind like syntax (simplified)
+An example of tailwind like syntax (simplified)
 
-    ```crystal
-      borders = HtmlClassMerger.new
-      borders.register! :border, [/border-\d/, "border-none"], replace: [:border_x, :border_y]
+```crystal
+borders = HtmlClassMerger.new
+borders.register! :border, [/border-\d/, "border-none"], replace: "border_x border_y"
 
-      { "x" => ["l", "r"], "y" => ["t", "b"] }.each do |axis, sides|
-        borders.register! "border_#{axis}", [/border-#{axis}-\d/, "border-#{axis}-none"], replace: sides.map { "border_#{side}" }
-        sides.each do |side|
-          borders.register! "border_#{side}", [/border-#{side}-\d/, "border-#{side}-none"]
-        end
-      end
+{ "x" => ["l", "r"], "y" => ["t", "b"] }.each do |axis, sides|
+  borders.register! "border_#{axis}", [/border-#{axis}-\d/, "border-#{axis}-none"], replace: sides.map { |s| "border_#{s}" }
+  sides.each do |side|
+    borders.register! "border_#{side}", [/border-#{side}-\d/, "border-#{side}-none"]
+  end
+end
 
-      borders.merge("border-l-2 border-x-2")                     # => "border-x-2"
-      borders.merge("border-l-2 border-t-2 border-1")            # => "border-1"
-      borders.merge("border-l-2 border-t-2 border-y-2")          # => "border-l-2 border-y-2"
-      borders.merge("border-l-2 border-x-2 border-3 border-l-1") # => "border-4 border-l-1"
-    ```
+borders.merge("border-l-2 border-x-2")                     # => "border-x-2"
+borders.merge("border-l-2 border-t-2 border-1")            # => "border-1"
+borders.merge("border-l-2 border-t-2 border-y-2")          # => "border-l-2 border-y-2"
+borders.merge("border-l-2 border-x-2 border-3 border-l-1") # => "border-4 border-l-1"
+```
 
 ## Contributors
 

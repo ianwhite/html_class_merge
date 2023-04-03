@@ -1,5 +1,5 @@
 class HtmlClassMerger
-  # Represents an ordered list of HTML class names, which are grouped by arbitrary strings, and can also be marked as important.
+  # Represents an ordered list of tokens, which are grouped by arbitrary strings, and can also be marked as important.
   # Only one token per group is stored.
   class Tokens
     @tokens = {} of String => String
