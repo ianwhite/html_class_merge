@@ -26,57 +26,84 @@ describe HtmlClassMerger do
     end
   end
 
-  # describe TailwindMergeStrategy do
-  #   it "handles simple group override" do
-  #     combiner = TailwindMergeStrategy.new(TestGroups.new)
+  describe "#register! - all the ways" do
+    it "(group : Symbol, String)" do
+      merger = HtmlClassMerger.new
+      merger.register! :foobar, "foo bar"
+      merger.merge("foo bar baz").should eq "bar baz"
+    end
 
-  #     combiner.merge("bg-red bg-white text-green text-black").should eq "bg-white text-black"
-  #   end
+    it "(group : String, String)" do
+      merger = HtmlClassMerger.new
+      merger.register! "foobar", ["foo", "bar"]
+      merger.merge("foo bar baz").should eq "bar baz"
+    end
 
-  #   it "handles simple replacements" do
-  #     combiner = TailwindMergeStrategy.new(TestGroups.new)
+    it "(group : String, Regex)" do
+      merger = HtmlClassMerger.new
+      merger.register! "foobar", /foo|bar/
+      merger.merge("foo bar baz").should eq "bar baz"
+    end
 
-  #     combiner.merge("border-l-1 border-x-2 border-3").should eq "border-3"
-  #     combiner.merge("border-l-1 border-x-2").should eq "border-x-2"
-  #     combiner.merge("border-l-1 border-y-2").should eq "border-l-1 border-y-2"
-  #     combiner.merge("border-3 border-x-2 border-l-1").should eq "border-3 border-x-2 border-l-1"
-  #     combiner.merge("border-l-1 border-y-2 border-l-3 border-b-2").should eq "border-y-2 border-l-3 border-b-2"
-  #   end
+    it "(group : Symbol, Enumerable(String | Regex))" do
+      merger = HtmlClassMerger.new
+      merger.register! :foobar, [/foo/, "bar"]
+      merger.merge("foo bar baz").should eq "bar baz"
+    end
 
-  #   it "handles important" do
-  #     combiner = TailwindMergeStrategy.new(TestGroups.new)
+    it "(group : Symbol, tokens : String)" do
+      merger = HtmlClassMerger.new
+      merger.register! :foobar, "foo bar"
+      merger.merge("foo bar baz").should eq "bar baz"
+    end
 
-  #     combiner.merge("!bg-red bg-white text-green text-black").should eq "!bg-red text-black"
-  #     combiner.merge("!bg-red bg-white !bg-green bg-black").should eq "!bg-green"
-  #   end
+    it "(group : Symbol, *splat of things)" do
+      merger = HtmlClassMerger.new
+      merger.register! :foobar, "foo", ["foo2 bar2", /\Abar\z/]
+      merger.merge("foo foo2 bar bar2 baz").should eq "bar2 baz"
+    end
 
-  #   it "handles important when replacing groups" do
-  #     combiner = TailwindMergeStrategy.new(TestGroups.new)
-  #     combiner.merge("border-l-1 border-x-2 border-3").should eq "border-3"
-  #     combiner.merge("!border-l-1 border-x-2 border-3").should eq "!border-l-1 border-3"
-  #     combiner.merge("border-3 !border-l-2 border-l-1").should eq "border-3 !border-l-2"
-  #     combiner.merge("border-3 !border-l-2 border-y-3 !border-x-2").should eq "border-3 border-y-3 !border-x-2"
-  #     combiner.merge("border-3 !border-l-2 border-y-3 !border-x-2 !border-2").should eq "!border-2"
-  #   end
+    it "(group : Symbol, matcher, replace: Symbol)" do
+      merger = HtmlClassMerger.new
+      merger.register! "foobar", "foo", replace: :foo
+      merger.groups_replaced_by?(:foobar).should eq Set{"foo"}
+    end
 
-  #   it "handles scopes (even if they are not specified in that same order)" do
-  #     combiner = TailwindMergeStrategy.new(TestGroups.new)
+    it "(group : Symbol, matcher, replace: String)" do
+      merger = HtmlClassMerger.new
+      merger.register! "foobar", "foo", replace: "foo"
+      merger.groups_replaced_by?(:foobar).should eq Set{"foo"}
+    end
 
-  #     combiner.merge("hover:bg-red bg-white hover:bg-green").should eq "bg-white hover:bg-green"
-  #     combiner.merge("lg:hover:bg-red hover:md:bg-green hover:lg:bg-blue md:hover:bg-white").should eq "hover:lg:bg-blue md:hover:bg-white"
-  #   end
+    it "(group : Symbol, matcher, replace: Enumerable(String | Symbol))" do
+      merger = HtmlClassMerger.new
+      merger.register! "foobar", "foo", replace: ["foo", :bar]
+      merger.groups_replaced_by?(:foobar).should eq Set{"foo", "bar"}
+    end
 
-  #   it "handles important with scopes" do
-  #     combiner = TailwindMergeStrategy.new(TestGroups.new)
+    it "(merger : HtmlClassMerger) merges the argument's registry with ours" do
+      merger = HtmlClassMerger.new
+      merger.register! :foobar, "foo"
+      merger2 = HtmlClassMerger.new
+      merger2.register! :foobar, "bar"
+      merger2.register! merger
+      merger2.merge("foo bar baz").should eq "bar baz"
+    end
+  end
 
-  #     combiner.merge("!hover:bg-red bg-white hover:bg-green").should eq "!hover:bg-red bg-white"
-  #     combiner.merge("lg:hover:bg-red !hover:md:bg-green hover:lg:bg-blue md:hover:bg-white").should eq "!hover:md:bg-green hover:lg:bg-blue"
-  #   end
+  describe "#register" do
+    it "does not mutate the original" do
+      merger = HtmlClassMerger.new
+      merger.register! :foobar, "foo"
+      merger2 = merger.register(:foobar, "bar")
+      merger3 = merger.register(merger2).register!(:foobar, "baz")
 
-  #   it "handles scopes with replacements" do
-  #     combiner = TailwindMergeStrategy.new(TestGroups.new)
+      merger.should_not eq merger2
+      merger.should_not eq merger3
 
-  #     combiner.merge("md:border-l-1 md:border-x-2 border-3").should eq "md:border-x-2 border-3"
-  #   end
-  # end
+      merger.merge("foo bar baz").should eq "foo bar baz"
+      merger2.merge("foo bar baz").should eq "bar baz"
+      merger3.merge("foo bar baz").should eq "baz"
+    end
+  end
 end

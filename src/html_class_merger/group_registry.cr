@@ -66,9 +66,17 @@ class HtmlClassMerger
       self
     end
 
-    def register(*args) : self
-      clone.register!(*args)
+    def merge!(other : GroupRegistry) : self
+      @replaces.merge!(other.replaces) { |_, a, b| a + b }
+      @string_matchers.merge!(other.string_matchers)
+      @regex_matchers.merge!(other.regex_matchers)
+      @match_cache.clear
+      self
     end
+
+    protected getter replaces : Hash(String, Set(String))
+    protected getter string_matchers : Hash(String, String)
+    protected getter regex_matchers : Hash(Regex, String)
 
     private def regex_match?(token : String) : String?
       @match_cache.fetch(token) do

@@ -8,7 +8,7 @@ class HtmlClassMerger
     include Tokenize
 
     # Given a group, return the set of groups that it replaces, or nil
-    abstract def groups_replaced_by?(group : String) : Set(String)?
+    abstract def groups_replaced_by?(group : String | Symbol) : Set(String)?
 
     # Given a html class token, return the group that it belongs to, if any.
     abstract def group_for?(token : String) : String?

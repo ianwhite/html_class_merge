@@ -30,11 +30,11 @@ By default `HtmlClassMerger` provides a way of configuring what html classes are
 
 1. Add the dependency to your `shard.yml`:
 
-   ```yaml
-   dependencies:
-     html_class_merger:
-       github: ianwhite/html_class_merger
-   ```
+```yaml
+dependencies:
+  html_class_merger:
+    github: ianwhite/html_class_merger
+```
 
 2. Run `shards install`
 
@@ -64,6 +64,10 @@ borders.merge("border-l-2 border-t-2 border-1")            # => "border-1"
 borders.merge("border-l-2 border-t-2 border-y-2")          # => "border-l-2 border-y-2"
 borders.merge("border-l-2 border-x-2 border-3 border-l-1") # => "border-4 border-l-1"
 ```
+
+## Development
+
+Run the tests with `crystal spec`
 
 ## Contributors
 
