@@ -27,12 +27,12 @@ class HtmlClassMerger
   end
 
   # use the group regsitry to find the group for the given token
-  def group_for?(token : String) : String?
+  def group_for?(token : String) : Symbol?
     @group_registry.group_for?(token)
   end
 
   # use the groups registry to find the groups replaced by the given group
-  def groups_replaced_by?(group : String | Symbol) : Set(String)?
+  def groups_replaced_by?(group : Symbol) : Set(Symbol)?
     @group_registry.groups_replaced_by?(group)
   end
 

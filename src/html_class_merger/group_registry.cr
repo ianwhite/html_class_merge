@@ -4,64 +4,62 @@ class HtmlClassMerger
   class GroupRegistry
     include Tokenize
 
-    alias Group = String | Symbol
     alias Matcher = String | Regex | Enumerable(String | Regex)
 
-    @replaces        = {} of String => Set(String)
-    @string_matchers = {} of String => String
-    @regex_matchers  = {} of Regex => String
+    @replaces        = {} of Symbol => Set(Symbol)
+    @string_matchers = {} of String => Symbol
+    @regex_matchers  = {} of Regex => Symbol
 
-    @match_cache = {} of String => String?
+    @match_cache = {} of String => Symbol?
 
     def_clone
 
     # returns the group the given token belongs to, or nil
-    def group_for?(token : String) : String?
+    def group_for?(token : String) : Symbol?
       @string_matchers[token]? || regex_match?(token)
     end
 
     # returns the set of groups that the given group replaces
-    def groups_replaced_by?(group : Group) : Set(String)?
-      @replaces[group.to_s]?
+    def groups_replaced_by?(group : Symbol) : Set(Symbol)?
+      @replaces[group]?
     end
 
-    def register!(group : Group, *matchers : Matcher, replace : Group | Enumerable(Group)) : self
+    def register!(group : Symbol, *matchers : Matcher, replace : Symbol | Enumerable(Symbol)) : self
       register!(group, *matchers)
       register_replace!(group, replace)
     end
 
-    def register!(group : Group, matcher : String) : self
+    def register!(group : Symbol, matcher : String) : self
       @match_cache.clear
-      tokenize(matcher).each { |string| @string_matchers[string] = group.to_s }
+      tokenize(matcher).each { |string| @string_matchers[string] = group }
       self
     end
 
-    def register!(group : Group, matcher : Regex) : self
+    def register!(group : Symbol, matcher : Regex) : self
       @match_cache.clear
-      @regex_matchers[matcher] = group.to_s
+      @regex_matchers[matcher] = group
       self
     end
 
-    def register!(group : Group, matcher : Enumerable(String | Regex)) : self
+    def register!(group : Symbol, matcher : Enumerable(String | Regex)) : self
       matcher.each { |m| register!(group, m) }
       self
     end
 
     # register what group the given string or regex matches
-    def register!(group : Group, *matchers : Matcher) : self
+    def register!(group : Symbol, *matchers : Matcher) : self
       matchers.each { |matcher| register!(group, matcher) }
       self
     end
 
     # register what groups are replaced by the given group
-    def register_replace!(group : Group, replace : Group) : self
-      group = group.to_s
-      @replaces[group] = Set(String).new unless @replaces.has_key?(group)
-      @replaces[group].concat tokenize(replace.to_s)
+    def register_replace!(group : Symbol, replace : Symbol) : self
+      @replaces[group] = Set(Symbol).new unless @replaces.has_key?(group)
+      @replaces[group] << replace
       self
     end
 
-    def register_replace!(group : Group, replace : Enumerable(Group)) : self
+    def register_replace!(group : Symbol, replace : Enumerable(Symbol)) : self
       replace.each { |r| register_replace!(group, r) }
       self
     end
@@ -74,11 +72,11 @@ class HtmlClassMerger
       self
     end
 
-    protected getter replaces : Hash(String, Set(String))
-    protected getter string_matchers : Hash(String, String)
-    protected getter regex_matchers : Hash(Regex, String)
+    protected getter replaces : Hash(Symbol, Set(Symbol))
+    protected getter string_matchers : Hash(String, Symbol)
+    protected getter regex_matchers : Hash(Regex, Symbol)
 
-    private def regex_match?(token : String) : String?
+    private def regex_match?(token : String) : Symbol?
       @match_cache.fetch(token) do
         @match_cache[token] = @regex_matchers.each { |r, group| return group if r =~ token }
       end

@@ -33,18 +33,6 @@ describe HtmlClassMerger do
       merger.merge("foo bar baz").should eq "bar baz"
     end
 
-    it "(group : String, String)" do
-      merger = HtmlClassMerger.new
-      merger.register! "foobar", ["foo", "bar"]
-      merger.merge("foo bar baz").should eq "bar baz"
-    end
-
-    it "(group : String, Regex)" do
-      merger = HtmlClassMerger.new
-      merger.register! "foobar", /foo|bar/
-      merger.merge("foo bar baz").should eq "bar baz"
-    end
-
     it "(group : Symbol, Enumerable(String | Regex))" do
       merger = HtmlClassMerger.new
       merger.register! :foobar, [/foo/, "bar"]
@@ -65,20 +53,14 @@ describe HtmlClassMerger do
 
     it "(group : Symbol, matcher, replace: Symbol)" do
       merger = HtmlClassMerger.new
-      merger.register! "foobar", "foo", replace: :foo
-      merger.groups_replaced_by?(:foobar).should eq Set{"foo"}
+      merger.register! :foobar, "foo", replace: :foo
+      merger.groups_replaced_by?(:foobar).should eq Set{:foo}
     end
 
-    it "(group : Symbol, matcher, replace: String)" do
+    it "(group : Symbol, matcher, replace: Enumerable(Symbol))" do
       merger = HtmlClassMerger.new
-      merger.register! "foobar", "foo", replace: "foo"
-      merger.groups_replaced_by?(:foobar).should eq Set{"foo"}
-    end
-
-    it "(group : Symbol, matcher, replace: Enumerable(String | Symbol))" do
-      merger = HtmlClassMerger.new
-      merger.register! "foobar", "foo", replace: ["foo", :bar]
-      merger.groups_replaced_by?(:foobar).should eq Set{"foo", "bar"}
+      merger.register! :foobar, "foo", replace: %i(foo bar)
+      merger.groups_replaced_by?(:foobar).should eq Set{:foo, :bar}
     end
 
     it "(merger : HtmlClassMerger) merges the argument's registry with ours" do

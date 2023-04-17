@@ -7,7 +7,9 @@ class HtmlClassMerger
 
     # Add the token to the group, optionally marking it as important,
     # If there is no group known for the token, use the token itself as the group
-    def add!(token : String, group : String, important : Bool = false) : self
+    def add!(token : String, group : Symbol | String, important : Bool = false) : self
+      group = group.to_s
+
       if !existing_important?(group) || important
         # when replacing a token in a group, remove the old token so that the token is placed at the end of the list
         @tokens.delete(group)
@@ -23,7 +25,9 @@ class HtmlClassMerger
 
     # remove the token for the specified group, unless the token is marked as important
     # if override_important is true, the token for the group will be removed even if it is marked as important
-    def remove!(group : String, override_important : Bool = false) : self
+    def remove!(group : Symbol | String, override_important : Bool = false) : self
+      group = group.to_s
+
       if !existing_important?(group) || override_important
         @tokens.delete(group)
       end

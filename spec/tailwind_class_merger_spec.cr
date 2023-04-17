@@ -4,13 +4,16 @@ require "../src/tailwind_class_merger"
 
 TestTailwindMerger = TailwindClassMerger.new
 TestTailwindMerger.register! :bg, /\Abg-/
-TestTailwindMerger.register! "text", [/\Atext-/]
-TestTailwindMerger.register! :border, [/border-\d/, "border-none"], replace: "border_x border_y"
+TestTailwindMerger.register! :text, [/\Atext-/]
+TestTailwindMerger.register! :border, [/border-\d/, "border-none"], replace: %i(border_x border_y)
 
-{ "x" => ["l", "r"], "y" => ["t", "b"] }.each do |axis, sides|
-  TestTailwindMerger.register! "border_#{axis}", [/border-#{axis}-\d/, "border-#{axis}-none"], replace: sides.map { |side| "border_#{side}" }
-  sides.each do |side|
-    TestTailwindMerger.register! "border_#{side}", [/border-#{side}-\d/, "border-#{side}-none"]
+{
+  { :border_x, "x", [ { :border_l, "l" }, { :border_r, "r" } ] },
+  { :border_y, "y", [ { :border_t, "t" }, { :border_b, "b" } ] },
+}.each do |(group, axis, sides)|
+  TestTailwindMerger.register! group, [/border-#{axis}-\d/, "border-#{axis}-none"], replace: sides.map(&.first)
+  sides.each do |group, side|
+    TestTailwindMerger.register! group, [/border-#{side}-\d/, "border-#{side}-none"]
   end
 end
 
