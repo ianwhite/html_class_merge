@@ -803,8 +803,8 @@ TailwindClasses.register! :scroll_snap_stop, %w(normal always).map { |i| "snap-#
 TailwindClasses.register! :scroll_snap_type, %w(none x y both mandatory proximity).map { |i| "snap-#{i}" }
 
 # https://tailwindcss.com/docs/touch-action
-TailwindClasses.register! :touch_action, %w(auto|none|pinch-zoom|manipulation).map { |i| "touch-#{i}" },
-                                         %w(x|left|right|y|up|down).map { |i| "touch-pan-#{i}" }
+TailwindClasses.register! :touch_action, %w(auto none pinch-zoom manipulation).map { |i| "touch-#{i}" },
+                                         %w(x left right y up down).map { |i| "touch-pan-#{i}" }
 
 # https://tailwindcss.com/docs/user-select
 TailwindClasses.register! :user_select, %w(none text all auto).map { |i| "select-#{i}" }
