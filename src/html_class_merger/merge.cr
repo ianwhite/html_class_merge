@@ -21,7 +21,7 @@ class HtmlClassMerger
     # is not scoped, the scope should be the empty string "".
     abstract def scoped_token(token : String) : { String, String }
 
-    # uses the Knowledge protocol and Tokens object to merge html classes
+    # uses the Merge protocol methods and Tokens object to merge html classes
     def merge(html_classes : String) : String
       tokenize(html_classes).reduce(Tokens.new) do |tokens, token|
         original_token = token
@@ -36,6 +36,14 @@ class HtmlClassMerger
 
         tokens.add! original_token, "#{scope}#{group || token}", is_important
       end.to_s
+    end
+
+    def merge(html_classes : Array(String)) : String
+      merge(html_classes.join(" "))
+    end
+
+    def merge(*html_classes : String) : String
+      merge(html_classes.to_a)
     end
   end
 end

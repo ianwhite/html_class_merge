@@ -834,7 +834,7 @@ TailwindClasses.register! :screen_readers, %w(sr-only not-sr-only)
 # only one property
 
 # https://github.com/tailwindlabs/tailwindcss-forms
-# by default defines no classes
+TailwindClasses.register! :form_control, %w(input textarea select multiselect checkbox radio).map { |i| "form-#{i}" }
 
 # https://github.com/tailwindlabs/tailwindcss-aspect-ratio
 TailwindClasses.register! :aspect_w, %w(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16).map { |i| "aspect-w-#{i}" }, replace: :aspect
