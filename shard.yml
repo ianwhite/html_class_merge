@@ -4,6 +4,6 @@ version: 0.1.0
 authors:
   - Ian White <ian.w.white@gmail.com>
 
-crystal: 1.7.3
+crystal: ">=1.6.0"
 
 license: MIT
