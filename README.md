@@ -56,10 +56,10 @@ large  = "rounded text-lg p-5 border-2"
 TailwindClasses.merge("#{button} #{danger}")
 # => "rounded-sm border text-gray-900 hover:text-white px-3 py-2 border-red-600 bg-red-50 hover:bg-red-700"
 
-TailwindClasses.merge("#{button} #{large}")
+TailwindClasses.merge(button, large)
 # => "border-gray-600 bg-gray-50 text-gray-900 hover:bg-gray-700 hover:text-white rounded text-lg p-5 border-2"
 
-TailwindClasses.merge("#{button} #{danger} #{large}")
+TailwindClasses.merge([button, danger, large])
 # => "text-gray-900 hover:text-white border-red-600 bg-red-50 hover:bg-red-700 rounded text-lg p-5 border-2"
 ```
 
