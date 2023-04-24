@@ -24,6 +24,7 @@ class HtmlClassMerger
       @replaces[group]?
     end
 
+    # register group matchers, and group replacements
     def register!(group : Symbol, *matchers : Matcher, replace : Symbol | Enumerable(Symbol)) : self
       register!(group, *matchers)
       register_replace!(group, replace)
@@ -64,6 +65,7 @@ class HtmlClassMerger
       self
     end
 
+    # merge another group registry into this one
     def merge!(other : GroupRegistry) : self
       @replaces.merge!(other.replaces) { |_, a, b| a + b }
       @string_matchers.merge!(other.string_matchers)
