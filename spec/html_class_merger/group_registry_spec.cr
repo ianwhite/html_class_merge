@@ -17,8 +17,8 @@ class HtmlClassMerger
 
     it "can register replacements" do
       registry = GroupRegistry.new
-      registry.register_replace! :border_x, [:border_l, :border_r]
-      registry.register_replace! :border, :border_x
+      registry.register! :border_x, [:border_l, :border_r]
+      registry.register! :border, :border_x
 
       registry.groups_replaced_by?(:border_x).should eq Set{:border_l, :border_r}
       registry.groups_replaced_by?(:border).should eq Set{:border_x}

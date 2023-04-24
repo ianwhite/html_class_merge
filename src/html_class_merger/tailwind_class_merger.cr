@@ -1,6 +1,6 @@
-require "./html_class_merger"
+require "../html_class_merger"
 
-class TailwindClassMerger < HtmlClassMerger
+class HtmlClassMerger::TailwindClassMerger < HtmlClassMerger
   # in tailwind, important classes are prefixed with "!"
   def important_token(token : String) : { Bool, String }
     token.starts_with?("!") ? { true, token[1..] } : { false, token }

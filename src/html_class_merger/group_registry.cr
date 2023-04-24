@@ -27,7 +27,7 @@ class HtmlClassMerger
     # register group matchers, and group replacements
     def register!(group : Symbol, *matchers : Matcher, replace : Symbol | Enumerable(Symbol)) : self
       register!(group, *matchers)
-      register_replace!(group, replace)
+      register!(group, replace)
     end
 
     def register!(group : Symbol, matcher : String) : self
@@ -54,14 +54,14 @@ class HtmlClassMerger
     end
 
     # register what groups are replaced by the given group
-    def register_replace!(group : Symbol, replace : Symbol) : self
+    def register!(group : Symbol, replace : Symbol) : self
       @replaces[group] = Set(Symbol).new unless @replaces.has_key?(group)
       @replaces[group] << replace
       self
     end
 
-    def register_replace!(group : Symbol, replace : Enumerable(Symbol)) : self
-      replace.each { |r| register_replace!(group, r) }
+    def register!(group : Symbol, replace : Enumerable(Symbol)) : self
+      replace.each { |r| register!(group, r) }
       self
     end
 
