@@ -12,14 +12,14 @@ class HtmlClassMerger
   # RegexIndex.regex_index(regex, 4)          # => "foo-"
   # RegexIndex.regex_index(regex, 5)          # => nil
   # RegexIndex.regex_index(regex, 3, "f")     # => nil
-  # RegexIndex.regex_index(regex, 3, "[fo]")  # => "foo"
-  # RegexIndex.regex_index(regex, 4, "[fo]")  # => nil
+  # RegexIndex.regex_index(regex, 3, /[fo]/)  # => "foo"
+  # RegexIndex.regex_index(regex, 4, /[fo]/)  # => nil
   # ```
   module RegexIndex
     extend self
 
     # return the index of the first n characters, if the regex would match only those n characters, or nil
-    def regex_index(regex : Regex, n = 2, char = "[\\w\\-]") : String?
+    def regex_index(regex : Regex, n = 2, char = /[\w-]/) : String?
       return nil                if regex.source.matches? /\A(?:\\A|\^)#{char}+\|/ # return nil if union at top level
       return regex.source[2, n] if regex.source.matches? /\A\\A#{char}{#{n}}/     # return first n chars for \A
       return regex.source[1, n] if regex.source.matches? /\A\^#{char}{#{n}}/      # return first n chars for ^

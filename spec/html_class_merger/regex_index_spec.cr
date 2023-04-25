@@ -9,8 +9,8 @@ class HtmlClassMerger
       RegexIndex.regex_index(regex, 4).should eq "foo-"
       RegexIndex.regex_index(regex, 5).should be_nil
       RegexIndex.regex_index(regex, 3, "f").should be_nil
-      RegexIndex.regex_index(regex, 3, "[fo]").should eq "foo"
-      RegexIndex.regex_index(regex, 4, "[fo]").should be_nil
+      RegexIndex.regex_index(regex, 3, /[fo]/).should eq "foo"
+      RegexIndex.regex_index(regex, 4, /[fo]/).should be_nil
     end
 
     it "#regex_index documentation example with caret anchor" do
@@ -20,8 +20,8 @@ class HtmlClassMerger
       RegexIndex.regex_index(regex, 4).should eq "foo-"
       RegexIndex.regex_index(regex, 5).should be_nil
       RegexIndex.regex_index(regex, 3, "f").should be_nil
-      RegexIndex.regex_index(regex, 3, "[fo]").should eq "foo"
-      RegexIndex.regex_index(regex, 4, "[fo]").should be_nil
+      RegexIndex.regex_index(regex, 3, /[fo]/).should eq "foo"
+      RegexIndex.regex_index(regex, 4, /[fo]/).should be_nil
     end
 
     it "#regex_index returns nil for non start anchored regex" do
