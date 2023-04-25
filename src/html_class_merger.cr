@@ -2,7 +2,7 @@ require "./html_class_merger/merge"
 require "./html_class_merger/group_registry"
 
 class HtmlClassMerger
-  VERSION = "0.1.0"
+  VERSION = "0.2.3"
 
   include Merge
 
