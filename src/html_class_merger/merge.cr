@@ -38,10 +38,12 @@ class HtmlClassMerger
       end.to_s
     end
 
+    # :ditto:
     def merge(html_classes : Array(String)) : String
       merge(html_classes.join(" "))
     end
 
+    # :ditto:
     def merge(*html_classes : String) : String
       merge(html_classes.to_a)
     end

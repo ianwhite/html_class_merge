@@ -8,40 +8,48 @@ class HtmlClassMerger
 
   def_clone
 
-  @group_registry = GroupRegistry.new
+  # used to register and lookup info about groups
+  getter group_registry : GroupRegistry = GroupRegistry.new
 
-  protected getter group_registry : GroupRegistry
-
+  # Register a group with the group registry
   def register!(*args, **kwargs)
     @group_registry.register!(*args, **kwargs)
     self
   end
 
-  def register(*args, **kwargs)
-    clone.register!(*args, **kwargs)
-  end
-
+  # merge the given HrefClassMerger's group registry into this one's
   def register!(merger : HtmlClassMerger)
     @group_registry.merge!(merger.group_registry)
     self
   end
 
-  # use the group regsitry to find the group for the given token
+  # non mutating version of register!
+  def register(*args, **kwargs)
+    clone.register!(*args, **kwargs)
+  end
+
+  # Returns the group of the given *token*, or nil if the token is not a group
   def group_for?(token : String) : Symbol?
     @group_registry.group_for?(token)
   end
 
-  # use the groups registry to find the groups replaced by the given group
+  # Returns the set of groups that *group* replaces, or nil if there are none
   def groups_replaced_by?(group : Symbol) : Set(Symbol)?
     @group_registry.groups_replaced_by?(group)
   end
 
-  # subclass to add knwoledge of what tokens are important
+  # Returns whether *token* is an important token
+  #
+  # This implementation always returns { false, token },
+  # subclass to add knowledge of what tokens are important.
   def important_token(token : String) : { Bool, String }
     { false, token }
   end
 
-  # subclass to add knowledge of what scoped tokens look like
+  # Returns the scope and underlying token for *token*
+  #
+  # This implementation always returns { "", token } (no scope),
+  # subclass to add knowledge of what scoped tokens look like.
   def scoped_token(token : String) : { String, String }
     { "", token }
   end

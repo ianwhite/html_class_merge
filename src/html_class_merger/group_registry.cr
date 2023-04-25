@@ -13,32 +13,35 @@ class HtmlClassMerger
     # regex matchers are indexed by the first 2 characters of what they would match, to speed up lookup
     getter regex_matchers  = {} of String? => Hash(Regex, Symbol)
 
+    # cache of regex matches, to speed up lookup
     @match_cache = {} of String => Symbol?
 
     def_clone
 
-    # returns the group the given token belongs to, or nil
+    # Returns the group of *token*, or nil
     def group_for?(token : String) : Symbol?
       @string_matchers[token]? || regex_match?(token)
     end
 
-    # returns the set of groups that the given group replaces
+    # Returns the set of groups that *group* replaces, or nil if there are none
     def groups_replaced_by?(group : Symbol) : Set(Symbol)?
       @replaces[group]?
     end
 
-    # register group matchers, and group replacements
+    # Register *matchers*, and *replace*ments for *group*
     def register!(group : Symbol, *matchers : Matcher, replace : Symbol | Enumerable(Symbol)) : self
       register!(group, *matchers)
       register!(group, replace)
     end
 
+    # Register a Striing matcher for *group*
     def register!(group : Symbol, matcher : String) : self
       @match_cache.clear
       tokenize(matcher).each { |string| @string_matchers[string] = group }
       self
     end
 
+    # Register a Regex matcher for *group*
     def register!(group : Symbol, matcher : Regex) : self
       @match_cache.clear
       regex_index = RegexIndex.regex_index(matcher)
@@ -47,30 +50,32 @@ class HtmlClassMerger
       self
     end
 
+    # Register a collection of String or Regex *matchers* for *group*
     def register!(group : Symbol, matcher : Enumerable(String | Regex)) : self
       matcher.each { |m| register!(group, m) }
       self
     end
 
-    # register what group the given string or regex matches
+    # Register a splat of String or Regex *matchers* for *group*
     def register!(group : Symbol, *matchers : Matcher) : self
       matchers.each { |matcher| register!(group, matcher) }
       self
     end
 
-    # register what groups are replaced by the given group
+    # Register a *group*'s *replace*ments
     def register!(group : Symbol, replace : Symbol) : self
       @replaces[group] = Set(Symbol).new unless @replaces.has_key?(group)
       @replaces[group] << replace
       self
     end
 
+    # Register a collection of *replace*ments for *group*
     def register!(group : Symbol, replace : Enumerable(Symbol)) : self
       replace.each { |r| register!(group, r) }
       self
     end
 
-    # merge another group registry into this one
+    # merge *other* into this registry
     def merge!(other : GroupRegistry) : self
       @replaces.merge!(other.replaces) { |_, a, b| a + b }
       @string_matchers.merge!(other.string_matchers)
@@ -79,6 +84,7 @@ class HtmlClassMerger
       self
     end
 
+    # return the group that matches *token* by regex, or nil.  This is cached.
     private def regex_match?(token : String) : Symbol?
       @match_cache.fetch(token) do
         @match_cache[token] = lookup_regex(token)
