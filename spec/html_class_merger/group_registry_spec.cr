@@ -46,5 +46,19 @@ class HtmlClassMerger
       registry2.group_for?("border-y-2").should eq :border_y
       registry2.groups_replaced_by?(:border_x).should eq Set{:border_l, :border_r}
     end
+
+    it "indexes regex's by their first 2 characters (for non disjuction regexs), to speed up lookup" do
+      registry = GroupRegistry.new
+      registry.register! :border_x, /\Aborder-x-\w\z/
+      registry.register! :border_y, /\Aborder-y-\w\z/
+      registry.register! :padding_left, /\Apl-\d\z/, /\A-pl-\d/
+      registry.register! :display, /\Ainline|flex|block\z/
+
+      registry.regex_matchers.keys.should eq ["bo", "pl", "-p", nil]
+      registry.regex_matchers["bo"].should eq({ /\Aborder-x-\w\z/ => :border_x, /\Aborder-y-\w\z/ => :border_y })
+      registry.regex_matchers["pl"].should eq({ /\Apl-\d\z/ => :padding_left })
+      registry.regex_matchers["-p"].should eq({ /\A-pl-\d/ => :padding_left })
+      registry.regex_matchers[nil].should eq({ /\Ainline|flex|block\z/ => :display })
+    end
   end
 end

@@ -1,6 +1,11 @@
 require "./tailwind_class_merger"
 
 class HtmlClassMerger
+  # This HtmlClassMerger object is configured to merge Tailwind classes.
+  # TODO: make this configurable
+  # TODO: split up into sections (layout, typography, etc.) which can be included individually
+  Tailwind = TailwindClassMerger.new
+
   # common regexps
   color_num       = /50|[1-9]00|950/
   filter_num      = /0|50|75|90|95|100|105|110|125|150|200/
@@ -22,8 +27,6 @@ class HtmlClassMerger
 
   # properties are defined in the same order as in the tailwind docs: https://tailwindcss.com/docs
 
-  Tailwind = TailwindClassMerger.new
-
   ### LAYOUT ###
 
   # https://tailwindcss.com/docs/aspect-ratio
@@ -33,7 +36,7 @@ class HtmlClassMerger
   Tailwind.register! :container, "container", replace: :max_width
 
   # https://tailwindcss.com/docs/columns
-  Tailwind.register! :columns, %r{columns-(?:1-9|10|11|12|base|xs|sm|md|lg|xl|[2-9]xl)},
+  Tailwind.register! :columns, %r{\Acolumns-(?:1-9|10|11|12|base|xs|sm|md|lg|xl|[2-9]xl)\z},
                                custom_length.call("columns")
 
   # https://tailwindcss.com/docs/break-after
@@ -513,7 +516,7 @@ class HtmlClassMerger
                                       custom_length.call("divide-y")
 
   # https://tailwindcss.com/docs/divide-color
-  Tailwind.register! :divide_color, %r{divide-#{color}},
+  Tailwind.register! :divide_color, %r{\Adivide-#{color}\z},
                                     custom_color.call("divide")
 
   # https://tailwindcss.com/docs/divide-style

@@ -1,4 +1,5 @@
 require "./tokenize"
+require "./regex_index"
 
 class HtmlClassMerger
   class GroupRegistry
@@ -6,9 +7,11 @@ class HtmlClassMerger
 
     alias Matcher = String | Regex | Enumerable(String | Regex)
 
-    @replaces        = {} of Symbol => Set(Symbol)
-    @string_matchers = {} of String => Symbol
-    @regex_matchers  = {} of Regex => Symbol
+    getter replaces        = {} of Symbol => Set(Symbol)
+    getter string_matchers = {} of String => Symbol
+
+    # regex matchers are indexed by the first 2 characters of what they would match, to speed up lookup
+    getter regex_matchers  = {} of String? => Hash(Regex, Symbol)
 
     @match_cache = {} of String => Symbol?
 
@@ -38,7 +41,9 @@ class HtmlClassMerger
 
     def register!(group : Symbol, matcher : Regex) : self
       @match_cache.clear
-      @regex_matchers[matcher] = group
+      regex_index = RegexIndex.regex_index(matcher)
+      @regex_matchers[regex_index] ||= {} of Regex => Symbol
+      @regex_matchers[regex_index][matcher] = group
       self
     end
 
@@ -69,19 +74,25 @@ class HtmlClassMerger
     def merge!(other : GroupRegistry) : self
       @replaces.merge!(other.replaces) { |_, a, b| a + b }
       @string_matchers.merge!(other.string_matchers)
-      @regex_matchers.merge!(other.regex_matchers)
+      @regex_matchers.merge!(other.regex_matchers) { |_, a, b| a.merge(b) }
       @match_cache.clear
       self
     end
 
-    protected getter replaces : Hash(Symbol, Set(Symbol))
-    protected getter string_matchers : Hash(String, Symbol)
-    protected getter regex_matchers : Hash(Regex, Symbol)
-
     private def regex_match?(token : String) : Symbol?
       @match_cache.fetch(token) do
-        @match_cache[token] = @regex_matchers.each { |r, group| return group if r =~ token }
+        @match_cache[token] = lookup_regex(token)
       end
+    end
+
+    private def lookup_regex(token) : Symbol?
+      regex_index = token[0, 2]
+      indexed_rexeg_match(regex_index, token) || indexed_rexeg_match(nil, token)
+    end
+
+    private def indexed_rexeg_match(regex_index, token)
+      return unless matchers = @regex_matchers[regex_index]?
+      matchers.each { |r, group| return group if r =~ token }
     end
   end
 end
