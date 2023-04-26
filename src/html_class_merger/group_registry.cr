@@ -42,6 +42,8 @@ class HtmlClassMerger
     end
 
     # Register a Regex matcher for *group*
+    #
+    # Regexes are indexed by the first 2 characters of what they would match, to speed up lookup
     def register!(group : Symbol, matcher : Regex) : self
       @match_cache.clear
       regex_index = RegexIndex.regex_index(matcher)
@@ -84,19 +86,23 @@ class HtmlClassMerger
       self
     end
 
-    # return the group that matches *token* by regex, or nil.  This is cached.
+    # Return the group that matches *token* by regex, or nil.  This is cached.
     private def regex_match?(token : String) : Symbol?
       @match_cache.fetch(token) do
         @match_cache[token] = lookup_regex(token)
       end
     end
 
+    # Return the group that matches *token* by regex, or nil
+    #
+    # Uses the first 2 characters of *token* to speed up lookup
     private def lookup_regex(token) : Symbol?
       regex_index = token[0, 2]
-      indexed_rexeg_match(regex_index, token) || indexed_rexeg_match(nil, token)
+      indexed_rexeg_match?(regex_index, token) || indexed_rexeg_match?(nil, token)
     end
 
-    private def indexed_rexeg_match(regex_index, token)
+    # Return the group that matches *token* by regex, or nil, in the given index
+    private def indexed_rexeg_match?(regex_index, token) : Symbol?
       return unless matchers = @regex_matchers[regex_index]?
       matchers.each { |r, group| return group if r =~ token }
     end
