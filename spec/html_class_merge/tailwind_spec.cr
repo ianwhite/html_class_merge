@@ -1,7 +1,7 @@
 require "../spec_helper"
-require "../../src/html_class_merger/tailwind"
+require "../../src/html_class_merge/tailwind"
 
-class HtmlClassMerger
+module HtmlClassMerge
   describe Tailwind do
     it "display" do
       Tailwind.merge("inline-block flex block table-row").should eq "table-row"
@@ -57,7 +57,7 @@ class HtmlClassMerger
     it "README example" do
       button = "rounded-sm border border-gray-600 bg-gray-50 text-gray-900 hover:bg-gray-700 hover:text-white px-3 py-2"
       danger = "border-red-600 bg-red-50 hover:bg-red-700"
-      large  = "rounded text-lg p-5 border-2"
+      large = "rounded text-lg p-5 border-2"
 
       Tailwind.merge("#{button} #{danger}").should eq "rounded-sm border text-gray-900 hover:text-white px-3 py-2 border-red-600 bg-red-50 hover:bg-red-700"
       Tailwind.merge([button, large]).should eq "border-gray-600 bg-gray-50 text-gray-900 hover:bg-gray-700 hover:text-white rounded text-lg p-5 border-2"

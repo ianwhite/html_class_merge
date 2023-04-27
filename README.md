@@ -1,6 +1,6 @@
-# html_class_merger
+# html_class_merge
 
-`html_class_merger` is a crystal shard that enables you specify how html classes should be merged, and so merges them.
+`html_class_merge` is a crystal shard that enables you specify how html classes should be merged, and so merges them.
 
 ## Motivation
 
@@ -20,11 +20,11 @@ Furthermore, if our merger knows about padding and text size, we could add anoth
 - Are there **scopes** that further divide the html classes? For example, a background colour group should not ovveride a *hover* background colour group, but within the *hover* scope, background colour groups should apply in the same way
 - Some html classes marked as **important** should not be overridden by subsequent html classes in the same group
 
-By default `HtmlClassMerger` provides a way of configuring what html classes are in a **group**, and what groups **replace** other groups.
+By default `HtmlClassMerge::GroupedMerge` provides a way of configuring what html classes are in a **group**, and what groups **replace** other groups.
 
-`HtmlClassMerger` provides template methods for determining **scope**, and whether a html class is **important**, which implementations can make use of.
+`HtmlClassMerge::GroupedMerge` provides template methods for determining **scope**, and whether a html class is **important**, which implementations can make use of.
 
-`TailwindClassMerger` extends the above with the knowledge of important and scopes.
+`HtmlClassMerge::TailwindMerge` extends the above with the knowledge of important and scopes.
 
 ## Installation
 
@@ -32,8 +32,8 @@ By default `HtmlClassMerger` provides a way of configuring what html classes are
 
 ```yaml
 dependencies:
-  html_class_merger:
-    github: ianwhite/html_class_merger
+  html_class_merge:
+    github: ianwhite/html_class_merge
 ```
 
 2. Run `shards install`
@@ -41,25 +41,25 @@ dependencies:
 ## Usage
 
 ```crystal
-require "html_class_merger"
+require "html_class_merge"
 ```
 
 To use a fully configured merger for tailwind css:
 
 ```crystal
-require "html_class_merger/tailwind"
+require "html_class_merge/tailwind"
 
 button = "rounded-sm border border-gray-600 bg-gray-50 text-gray-900 hover:bg-gray-700 hover:text-white px-3 py-2"
 danger = "border-red-600 bg-red-50 hover:bg-red-700"
 large  = "rounded text-lg p-5 border-2"
 
-HtmlClassMerger::Tailwind.merge("#{button} #{danger}")
+HtmlClassMerge::Tailwind.merge("#{button} #{danger}")
 # => "rounded-sm border text-gray-900 hover:text-white px-3 py-2 border-red-600 bg-red-50 hover:bg-red-700"
 
-HtmlClassMerger::Tailwind.merge(button, large)
+HtmlClassMerge::Tailwind.merge(button, large)
 # => "border-gray-600 bg-gray-50 text-gray-900 hover:bg-gray-700 hover:text-white rounded text-lg p-5 border-2"
 
-HtmlClassMerger::Tailwind.merge([button, danger, large])
+HtmlClassMerge::Tailwind.merge([button, danger, large])
 # => "text-gray-900 hover:text-white border-red-600 bg-red-50 hover:bg-red-700 rounded text-lg p-5 border-2"
 ```
 

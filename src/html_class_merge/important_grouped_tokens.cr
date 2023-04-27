@@ -1,7 +1,7 @@
-class HtmlClassMerger
+module HtmlClassMerge
   # Represents an ordered list of tokens, which are grouped by arbitrary strings, and can also be marked as important.
   # Only one token per group is stored.
-  class Tokens
+  class ImportantGroupedTokens
     @tokens = {} of String => String
     @important = Set(String).new
 
@@ -39,8 +39,8 @@ class HtmlClassMerger
       self
     end
 
-    def to_s : String
-      @tokens.values.join(" ")
+    def tokens : Array(String)
+      @tokens.values
     end
 
     private def existing_important?(group : String) : Bool

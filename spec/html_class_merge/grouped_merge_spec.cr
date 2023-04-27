@@ -1,6 +1,6 @@
-require "./spec_helper"
+require "../spec_helper"
 
-TestMerger = HtmlClassMerger.new
+TestMerger = HtmlClassMerge::GroupedMerge.new
 TestMerger.register! :bg, [/\Abg-/]
 TestMerger.register! :text, [/\Atext-/]
 TestMerger.register! :border, [/\Aborder-\d/], replace: [:border_x, :border_y, :border_l, :border_r, :border_t, :border_b]
@@ -11,7 +11,7 @@ TestMerger.register! :border_r, [/\Aborder-r-\d/]
 TestMerger.register! :border_t, [/\Aborder-t-\d/]
 TestMerger.register! :border_b, [/\Aborder-b-\d/]
 
-describe HtmlClassMerger do
+describe HtmlClassMerge::GroupedMerge do
   describe "#merge" do
     it "demonstrates simple group override" do
       TestMerger.merge("bg-red bg-white text-green text-black").should eq "bg-white text-black"
@@ -28,45 +28,45 @@ describe HtmlClassMerger do
 
   describe "#register! - all the ways" do
     it "(group : Symbol, String)" do
-      merger = HtmlClassMerger.new
+      merger = HtmlClassMerge::GroupedMerge.new
       merger.register! :foobar, "foo bar"
       merger.merge("foo bar baz").should eq "bar baz"
     end
 
     it "(group : Symbol, Enumerable(String | Regex))" do
-      merger = HtmlClassMerger.new
+      merger = HtmlClassMerge::GroupedMerge.new
       merger.register! :foobar, [/foo/, "bar"]
       merger.merge("foo bar baz").should eq "bar baz"
     end
 
     it "(group : Symbol, tokens : String)" do
-      merger = HtmlClassMerger.new
+      merger = HtmlClassMerge::GroupedMerge.new
       merger.register! :foobar, "foo bar"
       merger.merge("foo bar baz").should eq "bar baz"
     end
 
     it "(group : Symbol, *splat of things)" do
-      merger = HtmlClassMerger.new
+      merger = HtmlClassMerge::GroupedMerge.new
       merger.register! :foobar, "foo", ["foo2 bar2", /\Abar\z/]
       merger.merge("foo foo2 bar bar2 baz").should eq "bar2 baz"
     end
 
     it "(group : Symbol, matcher, replace: Symbol)" do
-      merger = HtmlClassMerger.new
+      merger = HtmlClassMerge::GroupedMerge.new
       merger.register! :foobar, "foo", replace: :foo
       merger.groups_replaced_by?(:foobar).should eq Set{:foo}
     end
 
     it "(group : Symbol, matcher, replace: Enumerable(Symbol))" do
-      merger = HtmlClassMerger.new
+      merger = HtmlClassMerge::GroupedMerge.new
       merger.register! :foobar, "foo", replace: %i(foo bar)
       merger.groups_replaced_by?(:foobar).should eq Set{:foo, :bar}
     end
 
     it "(merger : HtmlClassMerger) merges the argument's registry with ours" do
-      merger = HtmlClassMerger.new
+      merger = HtmlClassMerge::GroupedMerge.new
       merger.register! :foobar, "foo"
-      merger2 = HtmlClassMerger.new
+      merger2 = HtmlClassMerge::GroupedMerge.new
       merger2.register! :foobar, "bar"
       merger2.register! merger
       merger2.merge("foo bar baz").should eq "bar baz"
@@ -75,7 +75,7 @@ describe HtmlClassMerger do
 
   describe "#register" do
     it "does not mutate the original" do
-      merger = HtmlClassMerger.new
+      merger = HtmlClassMerge::GroupedMerge.new
       merger.register! :foobar, "foo"
       merger2 = merger.register(:foobar, "bar")
       merger3 = merger.register(merger2).register!(:foobar, "baz")

@@ -1,22 +1,24 @@
-require "./tokenize"
 require "./regex_index"
 
-class HtmlClassMerger
+module HtmlClassMerge
   class GroupRegistry
-    include Tokenize
+    include HtmlClass::Tokenize
+    include RegexIndex
 
     alias Matcher = String | Regex | Enumerable(String | Regex)
 
-    getter replaces        = {} of Symbol => Set(Symbol)
+    getter replaces = {} of Symbol => Set(Symbol)
     getter string_matchers = {} of String => Symbol
 
     # regex matchers are indexed by the first 2 characters of what they would match, to speed up lookup
-    getter regex_matchers  = {} of String? => Hash(Regex, Symbol)
+    getter regex_matchers = {} of String? => Hash(Regex, Symbol)
 
     # cache of regex matches, to speed up lookup
     @match_cache = {} of String => Symbol?
 
     def_clone
+
+    NO_GROUPS = Set.empty(Symbol)
 
     # Returns the group of *token*, or nil
     def group_for?(token : String) : Symbol?
@@ -24,8 +26,8 @@ class HtmlClassMerger
     end
 
     # Returns the set of groups that *group* replaces, or nil if there are none
-    def groups_replaced_by?(group : Symbol) : Set(Symbol)?
-      @replaces[group]?
+    def groups_replaced_by?(group : Symbol) : Set(Symbol)
+      @replaces[group]? || Set(Symbol).new
     end
 
     # Register *matchers*, and *replace*ments for *group*
@@ -46,9 +48,9 @@ class HtmlClassMerger
     # Regexes are indexed by the first 2 characters of what they would match, to speed up lookup
     def register!(group : Symbol, matcher : Regex) : self
       @match_cache.clear
-      regex_index = RegexIndex.regex_index(matcher)
-      @regex_matchers[regex_index] ||= {} of Regex => Symbol
-      @regex_matchers[regex_index][matcher] = group
+      idx = regex_index(matcher)
+      @regex_matchers[idx] ||= {} of Regex => Symbol
+      @regex_matchers[idx][matcher] = group
       self
     end
 

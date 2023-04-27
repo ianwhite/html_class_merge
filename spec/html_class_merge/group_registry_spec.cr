@@ -1,6 +1,6 @@
 require "../spec_helper"
 
-class HtmlClassMerger
+module HtmlClassMerge
   describe GroupRegistry do
     it "can register groups with #register!" do
       registry = GroupRegistry.new
@@ -22,7 +22,7 @@ class HtmlClassMerger
 
       registry.groups_replaced_by?(:border_x).should eq Set{:border_l, :border_r}
       registry.groups_replaced_by?(:border).should eq Set{:border_x}
-      registry.groups_replaced_by?(:text).should eq nil
+      registry.groups_replaced_by?(:text).should eq Set(Symbol).new
     end
 
     it "can register matches and replacements in one line" do
@@ -55,10 +55,10 @@ class HtmlClassMerger
       registry.register! :display, /\Ainline|flex|block\z/
 
       registry.regex_matchers.keys.should eq ["bo", "pl", "-p", nil]
-      registry.regex_matchers["bo"].should eq({ /\Aborder-x-\w\z/ => :border_x, /\Aborder-y-\w\z/ => :border_y })
-      registry.regex_matchers["pl"].should eq({ /\Apl-\d\z/ => :padding_left })
-      registry.regex_matchers["-p"].should eq({ /\A-pl-\d/ => :padding_left })
-      registry.regex_matchers[nil].should eq({ /\Ainline|flex|block\z/ => :display })
+      registry.regex_matchers["bo"].should eq({/\Aborder-x-\w\z/ => :border_x, /\Aborder-y-\w\z/ => :border_y})
+      registry.regex_matchers["pl"].should eq({/\Apl-\d\z/ => :padding_left})
+      registry.regex_matchers["-p"].should eq({/\A-pl-\d/ => :padding_left})
+      registry.regex_matchers[nil].should eq({/\Ainline|flex|block\z/ => :display})
     end
   end
 end
