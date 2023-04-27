@@ -18,8 +18,6 @@ module HtmlClassMerge
 
     def_clone
 
-    NO_GROUPS = Set.empty(Symbol)
-
     # Returns the group of *token*, or nil
     def group_for?(token : String) : Symbol?
       @string_matchers[token]? || regex_match?(token)
