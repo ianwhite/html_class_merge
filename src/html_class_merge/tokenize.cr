@@ -1,12 +1,4 @@
-module HtmlClass
-  alias Tokenizable = String | Enumerable(String)
-
-  # Protocol for merging tokens into a string
-  module Merge
-    # Merge the given tokens into a string
-    abstract def merge(*tokens : Tokenizable) : String
-  end
-
+module HtmlClassMerge
   # Provides #tokenize, which given a splat of Tokenizable, returns an array of String tokens
   module Tokenize
     extend self

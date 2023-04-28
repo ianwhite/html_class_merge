@@ -3,7 +3,7 @@ require "./important_grouped_tokens"
 
 module HtmlClassMerge
   class TailwindMerge < GroupedMerge
-    def merge(*html_classes : HtmlClass::Tokenizable) : String
+    def merge(*html_classes : Tokenizable) : String
       tokenize(*html_classes).reduce(ImportantGroupedTokens.new) do |tokens, tok|
         orig_tok = tok
         is_important, tok = important_token(tok)
@@ -15,7 +15,6 @@ module HtmlClassMerge
         end
 
         tokens.add!(orig_tok, "#{scope}#{group || tok}", is_important)
-
       end.tokens.join(" ")
     end
 

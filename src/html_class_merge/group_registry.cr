@@ -1,8 +1,9 @@
 require "./regex_index"
+require "./tokenize"
 
 module HtmlClassMerge
   class GroupRegistry
-    include HtmlClass::Tokenize
+    include Tokenize
     include RegexIndex
 
     alias Matcher = String | Regex | Enumerable(String | Regex)
@@ -34,7 +35,7 @@ module HtmlClassMerge
       register!(group, replace)
     end
 
-    # Register a Striing matcher for *group*
+    # Register a String matcher for *group*
     def register!(group : Symbol, matcher : String) : self
       @match_cache.clear
       tokenize(matcher).each { |string| @string_matchers[string] = group }

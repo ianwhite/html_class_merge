@@ -1,9 +1,10 @@
 require "./group_registry"
 require "./grouped_tokens"
+require "./tokenize"
 
 module HtmlClassMerge
   class GroupedMerge
-    include HtmlClass::Tokenize
+    include Tokenize
 
     def_clone
 
@@ -30,7 +31,7 @@ module HtmlClassMerge
     delegate group_for?, groups_replaced_by?, to: @group_registry
 
     # Merge the given html classes into a single string
-    def merge(*html_classes : HtmlClass::Tokenizable) : String
+    def merge(*html_classes : Tokenizable) : String
       tokenize(*html_classes).reduce(GroupedTokens.new) do |tokens, tok|
         group = group_for?(tok)
         groups_replaced_by?(group).each { |g| tokens.remove!(g) } if group
