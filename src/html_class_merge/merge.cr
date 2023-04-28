@@ -1,3 +1,5 @@
+require "../html_class_merge"
+
 module HtmlClassMerge
   # Protocol for merging tokens into a string
   module Merge
