@@ -12,6 +12,10 @@ TestMerger.register! :border_t, [/\Aborder-t-\d/]
 TestMerger.register! :border_b, [/\Aborder-b-\d/]
 
 describe HtmlClassMerge::GroupedMerge do
+  it "conforms to Merge" do
+    TestMerger.should be_a HtmlClassMerge::Merge
+  end
+
   describe "#merge" do
     it "demonstrates simple group override" do
       TestMerger.merge("bg-red bg-white text-green text-black").should eq "bg-white text-black"

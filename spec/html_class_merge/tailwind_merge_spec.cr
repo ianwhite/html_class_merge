@@ -18,6 +18,10 @@ module HtmlClassMerge
   end
 
   describe TailwindMerge do
+    it "conforms to Merge" do
+      TestTailwindMerge.should be_a HtmlClassMerge::Merge
+    end
+
     describe "#merge" do
       it "demonstrates simple group override" do
         TestTailwindMerge.merge("bg-red bg-white text-green text-black").should eq "bg-white text-black"

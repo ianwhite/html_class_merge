@@ -1,9 +1,11 @@
 require "./group_registry"
 require "./grouped_tokens"
+require "./merge"
 require "./tokenize"
 
 module HtmlClassMerge
   class GroupedMerge
+    include Merge
     include Tokenize
 
     def_clone
