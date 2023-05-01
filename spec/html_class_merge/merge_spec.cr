@@ -1,4 +1,5 @@
 require "spec"
+require "../../src/html_class_merge/tokenize"
 require "../../src/html_class_merge/merge"
 
 class TestMerge
