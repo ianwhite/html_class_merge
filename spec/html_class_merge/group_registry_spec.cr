@@ -1,6 +1,6 @@
 require "../spec_helper"
 
-module HtmlClassMerge
+module HTMLClassMerge
   describe GroupRegistry do
     it "can register groups with #register!" do
       registry = GroupRegistry.new
