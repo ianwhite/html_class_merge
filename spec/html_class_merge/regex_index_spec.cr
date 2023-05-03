@@ -1,6 +1,6 @@
 require "../spec_helper"
 
-module HtmlClassMerge
+module HTMLClassMerge
   describe RegexIndex do
     it "#regex_index documentation example" do
       regex = /\Afoo-(bar|baz)\z/

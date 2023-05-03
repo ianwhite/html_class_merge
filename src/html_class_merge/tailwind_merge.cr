@@ -1,7 +1,7 @@
 require "../html_class_merge"
 require "./important_grouped_tokens"
 
-module HtmlClassMerge
+module HTMLClassMerge
   class TailwindMerge < GroupedMerge
     def merge(*html_classes : Tokenizable) : String
       tokenize(*html_classes).reduce(ImportantGroupedTokens.new) do |tokens, tok|

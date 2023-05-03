@@ -1,4 +1,4 @@
-module HtmlClassMerge
+module HTMLClassMerge
   # Represents an ordered list of tokens, which are grouped by arbitrary strings, and can also be marked as important.
   # Only one token per group is stored.
   class ImportantGroupedTokens

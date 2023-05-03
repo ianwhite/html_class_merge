@@ -1,6 +1,6 @@
 require "../spec_helper"
 
-TestMerger = HtmlClassMerge::GroupedMerge.new
+TestMerger = HTMLClassMerge::GroupedMerge.new
 TestMerger.register! :bg, [/\Abg-/]
 TestMerger.register! :text, [/\Atext-/]
 TestMerger.register! :border, [/\Aborder-\d/], replace: [:border_x, :border_y, :border_l, :border_r, :border_t, :border_b]
@@ -11,9 +11,9 @@ TestMerger.register! :border_r, [/\Aborder-r-\d/]
 TestMerger.register! :border_t, [/\Aborder-t-\d/]
 TestMerger.register! :border_b, [/\Aborder-b-\d/]
 
-describe HtmlClassMerge::GroupedMerge do
+describe HTMLClassMerge::GroupedMerge do
   it "conforms to Merge" do
-    TestMerger.should be_a HtmlClassMerge::Merge
+    TestMerger.should be_a HTMLClassMerge::Merge
   end
 
   describe "#merge" do
@@ -32,45 +32,45 @@ describe HtmlClassMerge::GroupedMerge do
 
   describe "#register! - all the ways" do
     it "(group : Symbol, String)" do
-      merger = HtmlClassMerge::GroupedMerge.new
+      merger = HTMLClassMerge::GroupedMerge.new
       merger.register! :foobar, "foo bar"
       merger.merge("foo bar baz").should eq "bar baz"
     end
 
     it "(group : Symbol, Enumerable(String | Regex))" do
-      merger = HtmlClassMerge::GroupedMerge.new
+      merger = HTMLClassMerge::GroupedMerge.new
       merger.register! :foobar, [/foo/, "bar"]
       merger.merge("foo bar baz").should eq "bar baz"
     end
 
     it "(group : Symbol, tokens : String)" do
-      merger = HtmlClassMerge::GroupedMerge.new
+      merger = HTMLClassMerge::GroupedMerge.new
       merger.register! :foobar, "foo bar"
       merger.merge("foo bar baz").should eq "bar baz"
     end
 
     it "(group : Symbol, *splat of things)" do
-      merger = HtmlClassMerge::GroupedMerge.new
+      merger = HTMLClassMerge::GroupedMerge.new
       merger.register! :foobar, "foo", ["foo2 bar2", /\Abar\z/]
       merger.merge("foo foo2 bar bar2 baz").should eq "bar2 baz"
     end
 
     it "(group : Symbol, matcher, replace: Symbol)" do
-      merger = HtmlClassMerge::GroupedMerge.new
+      merger = HTMLClassMerge::GroupedMerge.new
       merger.register! :foobar, "foo", replace: :foo
       merger.groups_replaced_by?(:foobar).should eq Set{:foo}
     end
 
     it "(group : Symbol, matcher, replace: Enumerable(Symbol))" do
-      merger = HtmlClassMerge::GroupedMerge.new
+      merger = HTMLClassMerge::GroupedMerge.new
       merger.register! :foobar, "foo", replace: %i(foo bar)
       merger.groups_replaced_by?(:foobar).should eq Set{:foo, :bar}
     end
 
     it "(merger : HtmlClassMerger) merges the argument's registry with ours" do
-      merger = HtmlClassMerge::GroupedMerge.new
+      merger = HTMLClassMerge::GroupedMerge.new
       merger.register! :foobar, "foo"
-      merger2 = HtmlClassMerge::GroupedMerge.new
+      merger2 = HTMLClassMerge::GroupedMerge.new
       merger2.register! :foobar, "bar"
       merger2.register! merger
       merger2.merge("foo bar baz").should eq "bar baz"
@@ -79,7 +79,7 @@ describe HtmlClassMerge::GroupedMerge do
 
   describe "#register" do
     it "does not mutate the original" do
-      merger = HtmlClassMerge::GroupedMerge.new
+      merger = HTMLClassMerge::GroupedMerge.new
       merger.register! :foobar, "foo"
       merger2 = merger.register(:foobar, "bar")
       merger3 = merger.register(merger2).register!(:foobar, "baz")

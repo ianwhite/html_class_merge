@@ -1,7 +1,7 @@
 require "../spec_helper"
 require "../../src/html_class_merge/tailwind_merge"
 
-module HtmlClassMerge
+module HTMLClassMerge
   TestTailwindMerge = TailwindMerge.new
   TestTailwindMerge.register! :bg, /\Abg-/
   TestTailwindMerge.register! :text, [/\Atext-/]
@@ -19,7 +19,7 @@ module HtmlClassMerge
 
   describe TailwindMerge do
     it "conforms to Merge" do
-      TestTailwindMerge.should be_a HtmlClassMerge::Merge
+      TestTailwindMerge.should be_a HTMLClassMerge::Merge
     end
 
     describe "#merge" do

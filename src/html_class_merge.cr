@@ -1,7 +1,5 @@
 require "./html_class_merge/grouped_merge"
 
-module HtmlClassMerge
-  VERSION = "0.5.1"
+module HTMLClassMerge
+  VERSION = "0.6.0"
 end
-
-alias HTMLClassMerge = HtmlClassMerge

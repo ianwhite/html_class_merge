@@ -1,6 +1,6 @@
 require "../spec_helper"
 
-module HtmlClassMerge
+module HTMLClassMerge
   describe GroupedTokens do
     it "can add! and remove! tokens by group" do
       list = GroupedTokens.new

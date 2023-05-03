@@ -1,7 +1,7 @@
 require "./regex_index"
 require "./tokenize"
 
-module HtmlClassMerge
+module HTMLClassMerge
   class GroupRegistry
     include Tokenize
     include RegexIndex

@@ -1,6 +1,6 @@
 require "./tailwind_merge"
 
-module HtmlClassMerge
+module HTMLClassMerge
   # This HtmlClassMerger object is configured to merge Tailwind classes.
   # TODO: make this configurable
   # TODO: split up into sections (layout, typography, etc.) which can be included individually

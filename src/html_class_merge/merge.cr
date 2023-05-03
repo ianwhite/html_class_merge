@@ -1,6 +1,6 @@
 require "./tokenizable"
 
-module HtmlClassMerge
+module HTMLClassMerge
   # Protocol for merging tokens into a string
   module Merge
     # Merge the given tokens into a string

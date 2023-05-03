@@ -1,4 +1,4 @@
-module HtmlClassMerge
+module HTMLClassMerge
   # Given a Regex, return an index of the first n characters, if the regex would match those first n characters, or nil.
   # This means the Regex must be anchored at the start, contain only word chars for the first n characters,
   # and not be a union at the top level.

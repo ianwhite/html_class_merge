@@ -1,7 +1,7 @@
 require "../spec_helper"
 require "../../src/html_class_merge/tailwind"
 
-module HtmlClassMerge
+module HTMLClassMerge
   describe Tailwind do
     it "display" do
       Tailwind.merge("inline-block flex block table-row").should eq "table-row"

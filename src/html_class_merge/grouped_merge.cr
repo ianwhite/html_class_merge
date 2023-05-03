@@ -3,7 +3,7 @@ require "./grouped_tokens"
 require "./merge"
 require "./tokenize"
 
-module HtmlClassMerge
+module HTMLClassMerge
   class GroupedMerge
     include Merge
     include Tokenize

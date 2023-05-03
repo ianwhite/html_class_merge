@@ -1,6 +1,6 @@
 require "./tokenizable"
 
-module HtmlClassMerge
+module HTMLClassMerge
   # Provides #tokenize, which given a splat of Tokenizable, returns an array of String tokens
   module Tokenize
     extend self

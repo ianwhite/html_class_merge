@@ -1,6 +1,6 @@
 require "../spec_helper"
 
-module HtmlClassMerge
+module HTMLClassMerge
   describe Tokenize do
     it "#tokenize tokenizes a String" do
       Tokenize.tokenize("foo bar baz").should eq %w(foo bar baz)

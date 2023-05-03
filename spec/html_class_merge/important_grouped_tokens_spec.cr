@@ -2,7 +2,7 @@ require "../spec_helper"
 
 require "../../src/html_class_merge/important_grouped_tokens"
 
-module HtmlClassMerge
+module HTMLClassMerge
   describe ImportantGroupedTokens do
     it "can add! and remove! tokens by group" do
       list = ImportantGroupedTokens.new

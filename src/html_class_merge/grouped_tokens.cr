@@ -1,4 +1,4 @@
-module HtmlClassMerge
+module HTMLClassMerge
   # Represents an ordered list of tokens, which are grouped by a symbol.
   # Only one token per group is stored.
   # The order of the tokens is determined by the order in which they are added.
